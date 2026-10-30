@@ -27,4 +27,57 @@
       transform: translateY(0);
     }
   }
-}@import "tailwindcss";
+}
+
+/* Effet de secouage + ombrage au survol pour les cartes cliquables */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-1px); }
+  40% { transform: translateX(1px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+}
+
+.shake-hover:hover {
+  box-shadow: -6px 6px 16px -4px rgba(99, 102, 241, 0.3);
+  transition: box-shadow 5s ease;
+}
+
+/* Bannière défilante infinie (tech marquee) */
+@keyframes marqueeScroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.marquee-track {
+  animation: marqueeScroll 38s linear infinite;
+  will-change: transform;
+}
+
+/* Pause au survol de la bannière */
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Respecte les préférences d'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+@layer components {
+  .engineering-card {
+    @apply rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/70 p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+  }
+  .engineering-card-title {
+    @apply font-bold text-lg text-slate-900 dark:text-white;
+  }
+  .engineering-card-text {
+    @apply text-sm text-slate-600 dark:text-slate-300 leading-relaxed;
+  }
+  .engineering-card-tag {
+    @apply px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-300;
+  }
+}
