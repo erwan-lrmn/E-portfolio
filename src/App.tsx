@@ -33,11 +33,13 @@ import mobilite2 from './assets/mobilité 2.webp';
 import mobilite3 from './assets/mobilité 3.jpg';
 import karate from './assets/karate.webp';
 import musculation from './assets/musculation.webp';
-import cuisine from './assets/cuisine.webp';
+import cuisine from './assets/cooking-chopping.webp';
 import toulouseContact from './assets/Toulouse_Contact.webp';
 import roleModelKao from './assets/role-model-kao.jpg';
 import roleModelBengio from './assets/role-model-bengio.jpg';
 import roleModelLee from './assets/role-model-lee.jpg';
+import cvFr from './assets/cv-fr.pdf';
+import cvEn from './assets/cv-en.pdf';
 
 const GithubIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -496,6 +498,8 @@ interface ExpandableCardProps {
   imagePosition?: string;
   /** Conteneur dans lequel la modal doit être centrée (sinon : viewport). */
   containerRef?: React.RefObject<HTMLElement | null>;
+  /** Masque le liseré supérieur et la barre « Vue détaillée » de la modal. */
+  hideTopChrome?: boolean;
 }
 
 type ExpandStatus = 'closed' | 'opening' | 'open' | 'closing';
@@ -516,6 +520,7 @@ const ExpandableCard: React.FC<ExpandableCardProps> = ({
   tag,
   imagePosition,
   containerRef,
+  hideTopChrome = false,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<ExpandStatus>('closed');
@@ -632,23 +637,27 @@ const ExpandableCard: React.FC<ExpandableCardProps> = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Liseré dégradé signature du site */}
-        <div className="absolute inset-x-0 top-0 z-30 h-[3px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+        {!hideTopChrome && (
+          <>
+            {/* Liseré dégradé signature du site */}
+            <div className="absolute inset-x-0 top-0 z-30 h-[3px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
 
-        {/* Barre supérieure façon fenêtre */}
-        <div className="flex shrink-0 items-center gap-4 border-b border-slate-200/70 bg-white/80 px-5 py-3 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80 sm:px-7">
-          <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-              {lang === 'fr' ? 'Vue détaillée' : 'Expanded view'}
-            </span>
-          </div>
-        </div>
+            {/* Barre supérieure façon fenêtre */}
+            <div className="flex shrink-0 items-center gap-4 border-b border-slate-200/70 bg-white/80 px-5 py-3 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80 sm:px-7">
+              <div className="flex items-center gap-2.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
+                </span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                  {lang === 'fr' ? 'Vue détaillée' : 'Expanded view'}
+                </span>
+              </div>
+            </div>
+          </>
+        )}
 
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="modal-scroll min-h-0 flex-1 overflow-y-auto">
           {/* Visuel principal avec titre incrusté */}
           <div className="relative">
             <img
@@ -1324,6 +1333,7 @@ export default function App() {
                       lang={lang}
                       tag={lang === 'fr' ? 'Mobilité internationale' : 'International mobility'}
                       containerRef={mobilitySectionRef}
+                      hideTopChrome
                     />
                   ))}
                 </div>
@@ -1415,10 +1425,10 @@ export default function App() {
                             : 'Take part in outreach rounds to distribute meals, clothes and hygiene kits to people in precarious situations.',
                         },
                         {
-                          title: lang === 'fr' ? 'Jardin partagé sur le campus' : 'Community garden on campus',
+                          title: lang === 'fr' ? 'Ateliers de cuisine anti-gaspillage' : 'Anti-food-waste cooking workshops',
                           desc: lang === 'fr'
-                            ? 'Créer et entretenir un jardin partagé avec compost et ateliers de sensibilisation à la biodiversité.'
-                            : 'Help create and maintain a shared garden with composting and biodiversity awareness activities.',
+                            ? 'Organiser des ateliers pour cuisiner les invendus et sensibiliser au gaspillage alimentaire.'
+                            : 'Run workshops to cook surplus food and raise awareness about food waste.',
                         },
                       ].map((project) => (
                         <li key={project.title} className="p-4 rounded-xl bg-white/60 dark:bg-slate-900/40 border border-slate-200/70 dark:border-slate-700/60">
@@ -1580,11 +1590,11 @@ export default function App() {
                         : 'Education, experience, projects and skills — available in French and English.'}
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      <a href="/cv-fr.pdf" download="Erwan_Leremon_CV_FR.pdf" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md transition-all">
+                      <a href={cvFr} download="Erwan_Leremon_CV_FR.pdf" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md transition-all">
                         <Download className="w-4 h-4" />
                         {lang === 'fr' ? 'CV (Français)' : 'CV (French)'}
                       </a>
-                      <a href="/cv-en.pdf" download="Erwan_Leremon_CV_EN.pdf" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-all">
+                      <a href={cvEn} download="Erwan_Leremon_CV_EN.pdf" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-all">
                         <Download className="w-4 h-4" />
                         {lang === 'fr' ? 'CV (Anglais)' : 'CV (English)'}
                       </a>
@@ -1787,7 +1797,7 @@ What I take away — learn to present complex ideas, build bridges between ecosy
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder={t.contact.namePlaceholder}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
 
@@ -1801,7 +1811,7 @@ What I take away — learn to present complex ideas, build bridges between ecosy
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder={t.contact.emailPlaceholder}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
 
@@ -1815,7 +1825,7 @@ What I take away — learn to present complex ideas, build bridges between ecosy
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder={t.contact.messagePlaceholder}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
 
@@ -1911,7 +1921,7 @@ What I take away — learn to present complex ideas, build bridges between ecosy
                 </button>
               </div>
               <iframe
-                src={lang === 'fr' ? '/cv-fr.pdf' : '/cv-en.pdf'}
+                src={lang === 'fr' ? cvFr : cvEn}
                 title={lang === 'fr' ? 'CV français' : 'English CV'}
                 className="w-full h-full border-0"
               />
